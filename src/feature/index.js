@@ -1,3 +1,11 @@
+function wrapper(fun, state) {
+  return function () {
+    const args = [...arguments].slice(0, arguments.length - 1);
+    args.push(state);
+    return fun.apply(state, args);
+  };
+}
+
 export default (files, matchers, definitions) => {
   if (global.mockedJestCucumber) {
     global.loadFeature = mockedJestCucumber.loadFeature;
@@ -20,9 +28,7 @@ export default (files, matchers, definitions) => {
             let i;
             for (i = matchers.length - 1; i >= 0; --i) {
               if (new RegExp(matchers[i]).test(step.stepText)) {
-                options[step.keyword](matchers[i],
-                  /^[^{]+?=>/.test(definitions[i].toString()) ?
-                  definitions[i](state) : definitions[i].bind(state));
+                options[step.keyword](matchers[i], wrapper(definitions[i], state));
                 break;
               }
             }
