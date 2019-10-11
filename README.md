@@ -45,7 +45,7 @@ npm install auto-jest-cucumber --save-dev
 Feature: Rocket Launching
 
 Scenario: Launching a SpaceX rocket
-  Given I am Elon Musk attempting to launch a rocket into space
+  Given I am Elon Musk attempting to launch rocket "Falcon 9" into space
   When I launch the rocket
   Then the rocket should end up in space
   And the booster(s) should land back on the launch pad
@@ -56,36 +56,38 @@ Scenario: Launching a SpaceX rocket
 ```javascript
 // features/rocket-launching.steps.js
 
-export default [
+var Rocket = require('../rocket');
+
+module.exports = [
   [
-    'I am Elon Musk attempting to launch a rocket into space',
-    state => () => {
-      state.rocket = new Rocket();
-    })
+    /^I am Elon Musk attempting to launch rocket (.*) into space$/,
+    (name, state) => {
+      state.rocket = new Rocket(name);
+    }
   ],
   [
     'I launch the rocket',
-    state => () => {
-      rocket.launch();
-    })
+    state => {
+      state.rocket.launch();
+    }
   ],
   [
     'the rocket should end up in space',
-    state => () => {
+    state => {
       expect(state.rocket.isInSpace).toBe(true);
-    })
+    }
   ],
   [
     'the booster(s) should land back on the launch pad',
-    state => () => {
+    state => {
       expect(state.rocket.boostersLanded).toBe(true);
-    })
+    }
   ],
   [
     'nobody should doubt me ever again',
-    state => () => {
+    state => {
       expect('people').not.toBe('haters');
-    })
+    }
   ]
 ];
 ```
