@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "prepublishOnly": "webpack",
-    "np": "np"
+    "np": "git remote rm origin && (np --publish false --cleanup false || echo Error on np) && git remote add origin git@github.com:TexKiller/auto-jest-cucumber.git && git push --set-upstream origin master"
   },
   "repository": {
     "type": "git",
