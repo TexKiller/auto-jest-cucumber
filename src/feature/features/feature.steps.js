@@ -6,7 +6,7 @@ import mockJestCucumber from '../../features/mockJestCucumber';
 export default [
   [
     /^(.*) is loaded with (.*)$/,
-    state => (featurePath, steps) => {
+    (featurePath, steps, state) => {
       featurePath = path.resolve(__dirname, './samples/' + featurePath.split('(')[0].trim() + '.feature');
       steps = steps.split(',');
       const items = require(featurePath + '.js').default;

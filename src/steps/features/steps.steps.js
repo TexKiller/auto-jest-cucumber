@@ -5,7 +5,7 @@ import steps from '..';
 export default [
   [
     /^(.*) steps were loaded before$/,
-    state => previous => {
+    (previous, state) => {
       const previousSteps = require(path.resolve(__dirname, './samples/' + previous + '.steps.js'));
       state.matchers = previousSteps.matchers;
       state.definitions = previousSteps.definitions;
@@ -13,7 +13,7 @@ export default [
   ],
   [
     /^(.*) are loaded$/,
-    state => stepsPath => {
+    (stepsPath, state) => {
       stepsPath = path.resolve(__dirname, './samples/' + stepsPath.split('(')[0].trim() + '.steps.js');
       const newSteps = steps([stepsPath], state.matchers, state.definitions);
       state.matchers = newSteps.matchers;
@@ -22,7 +22,7 @@ export default [
   ],
   [
     /^(.*) steps should be updated with (.*)$/,
-    state => (previous, stepsPath) => {
+    (previous, stepsPath, state) => {
       const previousSteps = require('./samples/' + previous + '.steps.js');
       const steps = require('./samples/' + stepsPath.split('(')[0].trim() + '.steps.js').default;
       expect(state.matchers).toStrictEqual([...previousSteps.matchers, ...steps.map(step => step[0])]);

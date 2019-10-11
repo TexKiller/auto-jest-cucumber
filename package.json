@@ -21,7 +21,7 @@
   "devDependencies": {
     "@babel/core": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
-    "auto-jest-cucumber": "1.0.0",
+    "auto-jest-cucumber": "1.1.0",
     "babel-loader": "^8.0.6",
     "jshint": "^2.10.2",
     "np": "^5.1.1",

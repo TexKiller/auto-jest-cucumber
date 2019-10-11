@@ -1,10 +1,10 @@
-import autoJestCucumber from '../../dist/auto-jest-cucumber';
+import autoJestCucumber from 'auto-jest-cucumber';
 import mockJestCucumber from './mockJestCucumber';
 
 export default [
   [
     /^auto-jest-cucumber is loaded on (.*)$/,
-    state => folder => {
+    (folder, state) => {
       const folderPath = './samples/' + folder;
       const items = require(folderPath + '/' + folder + '.feature.js').default;
       mockJestCucumber(state, items);
@@ -16,7 +16,7 @@ export default [
   ],
   [
     /^(.*) are defined$/,
-    state => definitions => {
+    (definitions, state) => {
       expect(state.definitions).toStrictEqual(definitions.split('}')
         .filter(featureDefinition => featureDefinition.length > 0)
         .map(featureDefinition => {
