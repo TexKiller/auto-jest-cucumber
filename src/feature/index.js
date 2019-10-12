@@ -1,6 +1,7 @@
-function wrapper(fun, state) {
+function wrapper(types, fun, state) {
   return function () {
-    const args = [...arguments].slice(0, arguments.length - 1);
+    let args = [...arguments].slice(0, arguments.length - 1);
+    args = args.map((arg, i) => types[i] === 'json' ? JSON.parse(arg) : arg);
     args.push(state);
     return fun.apply(state, args);
   };
@@ -27,9 +28,30 @@ export default (files, matchers, definitions) => {
           scenario.steps.forEach(step => {
             let i;
             for (i = matchers.length - 1; i >= 0; --i) {
-              if (new RegExp(matchers[i]).test(step.stepText)) {
-                options[step.keyword](matchers[i], wrapper(definitions[i], state));
-                break;
+              const params = step.stepText.match(new RegExp(matchers[i]));
+              if (params) {
+                params.shift();
+                const types = params.map(param => {
+                  let json;
+                  try {
+                    JSON.parse(param);
+                    json = true;
+                  } catch (e) {}
+                  if (json) {
+                    return 'json';
+                  } else {
+                    if (param.lastIndexOf('<') === 0 &&
+                      param.indexOf('>') === param.length - 1) {
+                      return 'example';
+                    } else {
+                      return 'invalid';
+                    }
+                  }
+                });
+                if (types.reduce((valid, type) => valid && type !== 'invalid', true)) {
+                  options[step.keyword](matchers[i], wrapper(types, definitions[i], state));
+                  break;
+                }
               }
             }
             if (i < 0) {
