@@ -15,6 +15,7 @@ Even though [jest-cucumber](https://github.com/bencompton/jest-cucumber) is very
 The following steps show how to setup a basic feature test using Auto Jest Cucumber with the default options.
 
 It is possible to customize this behaviour, however that is not addressed here and is undocumented for now.
+You can check the file `src/features/self.js` for an example.
 
 ### Install Auto Jest Cucumber:
 
@@ -61,31 +62,31 @@ var Rocket = require('../rocket');
 module.exports = [
   [
     /^I am Elon Musk attempting to launch rocket (.*) into space$/,
-    (name, state) => {
-      state.rocket = new Rocket(name);
+    function (name) {
+      this.rocket = new Rocket(name);
     }
   ],
   [
     'I launch the rocket',
-    state => {
-      state.rocket.launch();
+    function () {
+      this.rocket.launch();
     }
   ],
   [
     'the rocket should end up in space',
-    state => {
-      expect(state.rocket.isInSpace).toBe(true);
+    function () {
+      expect(this.rocket.isInSpace).toBe(true);
     }
   ],
   [
     'the booster(s) should land back on the launch pad',
-    state => {
-      expect(state.rocket.boostersLanded).toBe(true);
+    function () {
+      expect(this.rocket.boostersLanded).toBe(true);
     }
   ],
   [
     'nobody should doubt me ever again',
-    state => {
+    function () {
       expect('people').not.toBe('haters');
     }
   ]
