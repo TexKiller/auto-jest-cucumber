@@ -23,7 +23,9 @@ export default (files, matchers, definitions) => {
       feature.scenarios.concat(feature.scenarioOutlines).sort((a, b) =>
         Math.sign(a.lineNumber - b.lineNumber)).forEach(scenario => {
         test(scenario.title, options => {
-          const state = {};
+          const state = {
+            featureFile: file
+          };
           beforeEach(() => Object.keys(state).forEach(key => delete state[key]));
           scenario.steps.forEach(step => {
             let i;
