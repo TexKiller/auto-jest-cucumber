@@ -26,7 +26,10 @@ export default (files, matchers, definitions) => {
           const state = {
             featureFile: file
           };
-          beforeEach(() => Object.keys(state).forEach(key => delete state[key]));
+          beforeEach(() => {
+            Object.keys(state).forEach(key => delete state[key]);
+            state.featureFile = file;
+          });
           scenario.steps.forEach(step => {
             let i;
             for (i = matchers.length - 1; i >= 0; --i) {
