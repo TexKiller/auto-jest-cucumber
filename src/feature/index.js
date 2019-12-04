@@ -1,7 +1,17 @@
 function wrapper(types, fun, state) {
   return function () {
     let args = [...arguments].slice(0, arguments.length - 1);
-    args = args.map((arg, i) => types[i] === 'json' ? JSON.parse(arg) : arg);
+    args = args.map((arg, i) => {
+      switch (types[i]) {
+        case 'json':
+          return JSON.parse(arg);
+        case 'example':
+          try {
+            return JSON.parse(arg);
+          } catch (e) {}
+      }
+      return arg;
+    });
     args.push(state);
     return fun.apply(state, args);
   };
