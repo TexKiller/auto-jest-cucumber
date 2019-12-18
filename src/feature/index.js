@@ -47,14 +47,11 @@ export default (files, matchers, definitions) => {
               if (params) {
                 params.shift();
                 const types = params.map(param => {
-                  let json;
-                  try {
-                    JSON.parse(param);
-                    json = true;
-                  } catch (e) {}
-                  if (json) {
-                    return 'json';
-                  } else {
+                  if (typeof param === "string") {
+                    try {
+                      JSON.parse(param);
+                      return 'json';
+                    } catch (e) {}
                     if (param.lastIndexOf('<') === 0 &&
                       param.indexOf('>') === param.length - 1) {
                       return 'example';
